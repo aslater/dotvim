@@ -1,4 +1,4 @@
-call pathogen#infect()
+execute pathogen#infect()
 
 " Expand tabs to three spaces
 set tabstop=3
@@ -31,3 +31,23 @@ set backup
 set writebackup
 set directory=C:\\vimbackup//
 set backupdir=C:\\vimbackup
+
+" Magic for airline
+set laststatus=2
+
+" Disable airline separators
+let g:airline_left_sep=''
+let g:airline_right_sep=''
+
+" Set airline theme
+let g:airline_theme='powerlineish'
+
+" """"""""""""""""""""""""""""""""""""""""""""""""
+" ==================== Colors ====================
+
+" Use syntax highlighting and color scheme
+syntax enable
+colorscheme desertEx
+
+" Use 256 colors in color schemes
+set t_Co=256

@@ -6,7 +6,11 @@ if version >= 700
 endif
 
 " don't show the toolbar in the GUI (only the menu)
-set guioptions-=T
+"set guioptions-=T
 
 " don't show tear-off menus
-set guioptions-=t
+"set guioptions-=t
+
+if has("gui_win32")
+   set guifont=Courier\ New:h12:w6.5
+endif

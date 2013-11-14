@@ -1,4 +1,4 @@
-ftype code="C:\Program Files (x86)\Vim\vim74a\gvim.exe" --remote-tab-silent "%1"
+ftype code="C:\Users\aslater\vimfiles\gvim_remote.bat" "%1"
 assoc .c=code
 assoc .h=code
 assoc .vimrc=code
