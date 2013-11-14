@@ -1,3 +1,5 @@
+call pathogen#infect()
+
 " Expand tabs to three spaces
 set tabstop=3
 set shiftwidth=3
