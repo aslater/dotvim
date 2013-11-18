@@ -1,1 +1,1 @@
-start gvim.exe --remote-tab-silent %*
+start gvim --remote-tab-silent %*
