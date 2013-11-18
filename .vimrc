@@ -10,8 +10,8 @@ set expandtab
 set backspace=indent,eol,start
 
 " No fancy indenting
-set nosmartindent
-set nocindent
+set smartindent
+set cindent
 
 " Turn off backups
 " set nobackup
@@ -58,6 +58,8 @@ let g:syntastic_mode_map = { 'mode': 'active',
                            \ 'passive_filetypes': ['c'] }
 
 let g:syntastic_ignore_files = ['\c\.h$', '\c\.c']
+
+let g:syntastic_check_on_wq = 0
 
 " Shortcuts
 map <C-q> :q<CR>
