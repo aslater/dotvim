@@ -186,6 +186,7 @@ function P4Checkout()
     "if (confirm("Checkout from Perforce?", "&Yes\n&No", 1) == 1)
       "echo "checking out " . b:p4path . " from " . b:p4ws
       "call system('p4 edit -c ' . b:p4ws . ' ' . b:p4path . ' > /dev/null')
+      call system('p4 -c' . b:p4ws . ' sync ' . b:p4path . ' > /dev/null')
       call system('p4 -c' . b:p4ws . ' edit ' . b:p4path . ' > /dev/null')
       if v:shell_error == 0
          set noreadonly
