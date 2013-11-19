@@ -85,6 +85,9 @@ let g:ctrlp_custom_ignore = {
    \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
    \ }
 
+" Don't let ctrlp go too crazy with the indexing
+let g:ctrlp_max_files = 5000
+
 " === NetRW Options ===
 
 " Toggle Vexplore with Ctrl-E
@@ -166,7 +169,11 @@ function IsUnderPerforce()
       "echo expand('%:p')
       let [p4localdir, p4workspace, p4repodir] = FindP4Info(expand('%:p:h'))
       if !(p4workspace ==# "")
-         let b:p4path = substitute(expand("%:p"), p4localdir, p4repodir, "")
+         "echo "replacing " . p4localdir . " with " . p4repodir . " in " . expand("%:p")
+         let b:p4path = substitute(expand("%:p"), escape(p4localdir, ' \'), escape(p4repodir, ' \'), "")
+         let b:p4path = substitute(b:p4path, '\', '/', 'g')
+         let b:p4ws = p4workspace
+         "echo "got " . b:p4path
       endif
       let b:p4checked = 1
    endif
@@ -177,7 +184,9 @@ function P4Checkout()
   call IsUnderPerforce()
   if exists("b:p4path")
     "if (confirm("Checkout from Perforce?", "&Yes\n&No", 1) == 1)
-      call system("p4 edit " . b:p4path . " > /dev/null")
+      "echo "checking out " . b:p4path . " from " . b:p4ws
+      "call system('p4 edit -c ' . b:p4ws . ' ' . b:p4path . ' > /dev/null')
+      call system('p4 -c' . b:p4ws . ' edit ' . b:p4path . ' > /dev/null')
       if v:shell_error == 0
          set noreadonly
          edit
