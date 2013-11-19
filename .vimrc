@@ -128,10 +128,10 @@ set autochdir
 function ReadP4Info(filename)
    let dirname = fnamemodify(a:filename, ':p:h')
    let p4info = readfile(a:filename) + ["", ""]
-   echo "got p4 info:"
-   echo dirname
-   echo p4info[0]
-   echo p4info[1]
+   "echo "got p4 info:"
+   "echo dirname
+   "echo p4info[0]
+   "echo p4info[1]
    return [dirname, p4info[0], p4info[1]]
 endfunction
 
@@ -143,8 +143,8 @@ function FindP4Info(dirname)
    for file in files
       if !isdirectory(file)
          if fnamemodify(file, ':t') ==# "p4root.txt"
-            echo "got match" 
-            echo file
+            "echo "got match" 
+            "echo file
             return ReadP4Info(file)
          endif
       endif
@@ -163,7 +163,7 @@ endfunction
 " Set a buffer-local variable to the perforce path, if this file is under the perforce root.
 function IsUnderPerforce()
    if !exists("b:p4checked")
-      echo expand('%:p')
+      "echo expand('%:p')
       let [p4localdir, p4workspace, p4repodir] = FindP4Info(expand('%:p:h'))
       if !(p4workspace ==# "")
          let b:p4path = substitute(expand("%:p"), p4localdir, p4repodir, "")
@@ -176,12 +176,13 @@ endfunction
 function P4Checkout()
   call IsUnderPerforce()
   if exists("b:p4path")
-    if (confirm("Checkout from Perforce?", "&Yes\n&No", 1) == 1)
+    "if (confirm("Checkout from Perforce?", "&Yes\n&No", 1) == 1)
       call system("p4 edit " . b:p4path . " > /dev/null")
       if v:shell_error == 0
-        set noreadonly
+         set noreadonly
+         edit
       endif
-    endif
+    "endif
   endif
 endfunction
 
