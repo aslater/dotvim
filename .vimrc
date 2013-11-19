@@ -71,10 +71,124 @@ let g:ctrlp_map = '<C-R>'
 let g:ctrlp_cmd = 'CtrlPMixed'
 
 " Look for obs.py (specific to our repository) to find workspace root
-let g:ctrlp_root_markers = 'obs.py'
+let g:ctrlp_root_markers = ['obs.py', 'dev', 'tools', 'depot', 'location']
+" let g:ctrlp_root_markers = 'obs.py'
 
 " If p4root can't be found, default to work from the current file's directory
 let g:ctrlp_working_path_mode = 'rc'
+"let g:ctrlp_working_path_mode = 'ra'
+"let g:ctrlp_working_path_mode = 'r'
+
+let g:ctrlp_custom_ignore = {
+   \ 'dir':  '\v[\/](\.(git|hg|svn)$|build$)',
+   \ 'file': '\v(\.(exe|so|dll|o|bin|a|d)$|\~$)',
+   \ 'link': 'SOME_BAD_SYMBOLIC_LINKS',
+   \ }
+
+" === NetRW Options ===
+
+" Toggle Vexplore with Ctrl-E
+function! ToggleVExplorer()
+  if exists("t:expl_buf_num")
+      let expl_win_num = bufwinnr(t:expl_buf_num)
+      if expl_win_num != -1
+          let cur_win_nr = winnr()
+          exec expl_win_num . 'wincmd w'
+          close
+          exec cur_win_nr . 'wincmd w'
+          unlet t:expl_buf_num
+      else
+          unlet t:expl_buf_num
+      endif
+  else
+      exec '1wincmd w'
+      Vexplore
+      let t:expl_buf_num = bufnr("%")
+  endif
+endfunction
+
+map <silent> <C-E> :call ToggleVExplorer()<CR>
+
+" Hit enter in the file browser to open the selected
+" file with :vsplit to the right of the browser.
+let g:netrw_browse_split = 4
+let g:netrw_altv = 1
+
+" Default to tree mode
+let g:netrw_liststyle=3
+
+" Suppress the banner
+let g:netrw_banner=0
+
+" Change directory to the current buffer when opening files.
+set autochdir
+
+" === Autocheckout from perforce ===
+
+function ReadP4Info(filename)
+   let dirname = fnamemodify(a:filename, ':p:h')
+   let p4info = readfile(a:filename) + ["", ""]
+   echo "got p4 info:"
+   echo dirname
+   echo p4info[0]
+   echo p4info[1]
+   return [dirname, p4info[0], p4info[1]]
+endfunction
+
+function FindP4Info(dirname)
+   "echo \"looking for p4 info in\"
+   "echo a:dirname
+   let files = split(globpath(a:dirname, '*'), '\n')
+
+   for file in files
+      if !isdirectory(file)
+         if fnamemodify(file, ':t') ==# "p4root.txt"
+            echo "got match" 
+            echo file
+            return ReadP4Info(file)
+         endif
+      endif
+   endfor
+
+   let newdir = fnamemodify(a:dirname, ':p:h:h')
+
+   " If we've run out of parent directories, hang our head in shame and return
+   if !(newdir ==# a:dirname)
+      return FindP4Info(newdir)
+   else
+      return ["", "", ""]
+   endif
+endfunction
+
+" Set a buffer-local variable to the perforce path, if this file is under the perforce root.
+function IsUnderPerforce()
+   if !exists("b:p4checked")
+      echo expand('%:p')
+      let [p4localdir, p4workspace, p4repodir] = FindP4Info(expand('%:p:h'))
+      if !(p4workspace ==# "")
+         let b:p4path = substitute(expand("%:p"), p4localdir, p4repodir, "")
+      endif
+      let b:p4checked = 1
+   endif
+endfunction
+
+" Confirm with the user, then checkout a file from perforce.
+function P4Checkout()
+  call IsUnderPerforce()
+  if exists("b:p4path")
+    if (confirm("Checkout from Perforce?", "&Yes\n&No", 1) == 1)
+      call system("p4 edit " . b:p4path . " > /dev/null")
+      if v:shell_error == 0
+        set noreadonly
+      endif
+    endif
+  endif
+endfunction
+
+if !exists("au_p4_cmd")
+  let au_p4_cmd=1
+  au FileChangedRO * call P4Checkout()
+endif
 
 " === Other shortcuts ===
 
@@ -88,3 +202,4 @@ function Popout()
 endfunction
 
 cnoreabbrev po call Popout()<CR>
+
