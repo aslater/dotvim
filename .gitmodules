@@ -10,3 +10,6 @@
 [submodule "bundle/ctrlp"]
 	path = bundle/ctrlp
 	url = https://github.com/kien/ctrlp.vim
+[submodule "bundle/p4checkout"]
+	path = bundle/p4checkout
+	url = https://github.com/aslater/p4checkout
