@@ -128,27 +128,59 @@ set autochdir
 
 " === Autocheckout from perforce ===
 
-function ReadP4Info(filename)
-   let dirname = fnamemodify(a:filename, ':p:h')
+function! Strip(input_string)
+    return substitute(a:input_string, '^\s*\(.\{-}\)\s*$', '\1', '')
+endfunction
+
+function! ReadP4Info(filename)
+   let b:p4localdir = fnamemodify(a:filename, ':p:h')
+
    let p4info = readfile(a:filename) + ["", ""]
+   let b:p4cmd = 'p4'
+   echo p4info
+   for line in p4info
+      "echo line
+      let splitline = split(line, '=')
+      "echo splitline
+      if len(splitline) > 1
+         let var = Strip(splitline[0])
+         "echo var
+         let value = Strip(join(splitline[1:], '='))
+         "echo value
+
+         if var ==? "p4workspace"
+            let b:p4cmd .= ' -c ' . value
+         elseif var ==? "p4path"
+            let b:p4repodir = value
+         elseif var ==? "p4user"
+            let b:p4cmd .= ' -u ' . value
+         elseif var ==? "p4pass"
+            let b:p4cmd .= ' -P ' . value
+         elseif var ==? "p4host"
+            let b:p4cmd .= ' -H ' . value
+         elseif var ==? "p4port"
+            let b:p4cmd .= ' -p ' . value
+         endif
+      endif
+   endfor
+   echo b:p4cmd
    "echo "got p4 info:"
    "echo dirname
    "echo p4info[0]
    "echo p4info[1]
-   return [dirname, p4info[0], p4info[1]]
 endfunction
 
-function FindP4Info(dirname)
+function! FindP4Info(dirname)
    "echo \"looking for p4 info in\"
    "echo a:dirname
    let files = split(globpath(a:dirname, '*'), '\n')
 
    for file in files
       if !isdirectory(file)
-         if fnamemodify(file, ':t') ==# "p4root.txt"
+         if fnamemodify(file, ':t') ==? "p4root.txt"
             "echo "got match" 
             "echo file
-            return ReadP4Info(file)
+            call ReadP4Info(file)
          endif
       endif
    endfor
@@ -157,22 +189,21 @@ function FindP4Info(dirname)
 
    " If we've run out of parent directories, hang our head in shame and return
    if !(newdir ==# a:dirname)
-      return FindP4Info(newdir)
+      call FindP4Info(newdir)
    else
-      return ["", "", ""]
+      return
    endif
 endfunction
 
 " Set a buffer-local variable to the perforce path, if this file is under the perforce root.
-function IsUnderPerforce()
-   if !exists("b:p4checked")
+function! IsUnderPerforce()
+   if !exists('b:p4checked')
       "echo expand('%:p')
-      let [p4localdir, p4workspace, p4repodir] = FindP4Info(expand('%:p:h'))
-      if !(p4workspace ==# "")
-         "echo "replacing " . p4localdir . " with " . p4repodir . " in " . expand("%:p")
-         let b:p4path = substitute(expand("%:p"), escape(p4localdir, ' \'), escape(p4repodir, ' \'), "")
+      call FindP4Info(expand('%:p:h'))
+      if exists('b:p4repodir')
+         "echo 'replacing ' . p4localdir . ' with ' . p4repodir . ' in ' . expand('%:p')
+         let b:p4path = substitute(expand("%:p"), escape(b:p4localdir, ' \'), escape(b:p4repodir, ' \'), "")
          let b:p4path = substitute(b:p4path, '\', '/', 'g')
-         let b:p4ws = p4workspace
          "echo "got " . b:p4path
       endif
       let b:p4checked = 1
@@ -180,20 +211,18 @@ function IsUnderPerforce()
 endfunction
 
 " Confirm with the user, then checkout a file from perforce.
-function P4Checkout()
-  call IsUnderPerforce()
-  if exists("b:p4path")
-    "if (confirm("Checkout from Perforce?", "&Yes\n&No", 1) == 1)
-      "echo "checking out " . b:p4path . " from " . b:p4ws
-      "call system('p4 edit -c ' . b:p4ws . ' ' . b:p4path . ' > /dev/null')
-      call system('p4 -c' . b:p4ws . ' sync ' . b:p4path . ' > /dev/null')
-      call system('p4 -c' . b:p4ws . ' edit ' . b:p4path . ' > /dev/null')
+function! P4Checkout()
+   call IsUnderPerforce()
+   if exists("b:p4path")
+      call system(p4cmd . ' sync ' . b:p4path . ' > /dev/null')
+      call system(p4cmd . ' edit ' . b:p4path . ' > /dev/null')
+      "echo b:p4cmd . ' sync ' . b:p4path . ' > /dev/null'
+      "echo b:p4cmd . ' edit ' . b:p4path . ' > /dev/null'
       if v:shell_error == 0
          set noreadonly
          edit
       endif
-    "endif
-  endif
+   endif
 endfunction
 
 if !exists("au_p4_cmd")
@@ -206,7 +235,7 @@ endif
 map <C-q> :q<CR>
 map <C-s> :w<CR>
 
-function Popout()
+function! Popout()
    let fn = expand('%:p')
    bdelete
    execute "!start gvim " . fn
