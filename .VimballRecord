@@ -1,0 +1,1 @@
+clang_complete.vmb: call delete('C:\Users\aslater\vimfiles/plugin/snippets/ultisnips.py')

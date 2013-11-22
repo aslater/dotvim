@@ -54,6 +54,7 @@ colorscheme desertEx
 set t_Co=256
 
 " === Syntastic options ===
+"
 let g:syntastic_mode_map = { 'mode': 'active',
                            \ 'active_filetypes': ['python'],
                            \ 'passive_filetypes': ['c'] }
@@ -125,6 +126,17 @@ let g:netrw_banner=0
 
 " Change directory to the current buffer when opening files.
 set autochdir
+
+" === Clang_complete options ===
+
+" Use clang library rather than executable
+let g:clang_use_library=1
+
+" DLL Path
+let g:clang_library_path='C:\tools\clang'
+
+" CC options filename
+let g:clang_cc_options_filename='compile_options.txt'
 
 " === Other shortcuts ===
 
