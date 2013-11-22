@@ -55,11 +55,15 @@ set t_Co=256
 
 " === Syntastic options ===
 "
-let g:syntastic_mode_map = { 'mode': 'active',
-                           \ 'active_filetypes': ['python'],
-                           \ 'passive_filetypes': ['c'] }
+"let g:syntastic_mode_map = { 'mode': 'active',
+"                           \ 'active_filetypes': ['python'],
+"                           \ 'passive_filetypes': ['c'] }
 
-let g:syntastic_ignore_files = ['\c\.h$', '\c\.c']
+let g:syntastic_mode_map = { 'mode': 'active',
+                           \ 'active_filetypes': ['python', 'c'],
+                           \ 'passive_filetypes': [] }
+
+" let g:syntastic_ignore_files = ['\c\.h$', '\c\.c']
 
 let g:syntastic_check_on_wq = 0
 
@@ -134,9 +138,6 @@ let g:clang_use_library=1
 
 " DLL Path
 let g:clang_library_path='C:\tools\clang'
-
-" CC options filename
-let g:clang_cc_options_filename='compile_options.txt'
 
 " === Other shortcuts ===
 

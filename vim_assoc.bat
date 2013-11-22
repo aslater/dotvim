@@ -1,6 +1,7 @@
-REM ftype code="C:\Users\aslater\vimfiles\gvim_remote.bat" "%1"
-ftype code=gvim --remote-tab-silent "%%1"
-ftype txtfile=gvim --remote-tab-silent "%%1"
+ftype code="C:\Users\aslater\vimfiles\gvim_remote.bat" "%%1"
+ftype txtfile="C:\Users\aslater\vimfiles\gvim_remote.bat" "%%1"
+REM ftype code=gvim --remote-tab-silent "%%1"
+REM ftype txtfile=gvim --remote-tab-silent "%%1"
 assoc .c=code
 assoc .C=code
 assoc .cpp=code
