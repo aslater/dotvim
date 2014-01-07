@@ -76,7 +76,7 @@ let g:ctrlp_map = '<C-R>'
 let g:ctrlp_cmd = 'CtrlPMixed'
 
 " Look for obs.py (specific to our repository) to find workspace root
-let g:ctrlp_root_markers = ['obs.py', 'dev', 'tools', 'depot', 'location']
+let g:ctrlp_root_markers = ['obs.py', 'dev', 'tools', 'depot', 'location', 'p4root.txt', 'vim.exe', 'vimrc']
 " let g:ctrlp_root_markers = 'obs.py'
 
 " If p4root can't be found, default to work from the current file's directory
@@ -131,13 +131,12 @@ let g:netrw_banner=0
 " Change directory to the current buffer when opening files.
 set autochdir
 
-" === Clang_complete options ===
+" === YouCompleteMe options ===
 
-" Use clang library rather than executable
-let g:clang_use_library=1
+" Don't ask to confirm extra conf file
+let g:ycm_confirm_extra_conf = 0
 
-" DLL Path
-let g:clang_library_path='C:\tools\clang'
+let g:ycm_filetype_whitelist = {'python':1, 'cpp':1, 'c':1}
 
 " === Other shortcuts ===
 
