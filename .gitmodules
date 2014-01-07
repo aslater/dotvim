@@ -19,3 +19,6 @@
 [submodule "bundle/YouCompleteMe"]
 	path = bundle/YouCompleteMe
 	url = https://github.com/Valloric/YouCompleteMe
+[submodule "bundle\\youcompleteme"]
+	path = bundle\\youcompleteme
+	url = https://github.com/Valloric/YouCompleteMe
