@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =3
+let g:netrw_dirhist_cnt =4
 let g:netrw_dirhist_1='C:/Users/aslater'
 let g:netrw_dirhist_2='C:/Users/aslater/test'
 let g:netrw_dirhist_3='C:/Users/aslater/test/test_threadctrl'
+let g:netrw_dirhist_4='C:\Users\aslater\Perforce\aslater_SSV\depot\location\core\tools\autotest\client'

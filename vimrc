@@ -131,12 +131,8 @@ let g:netrw_banner=0
 " Change directory to the current buffer when opening files.
 set autochdir
 
-" === YouCompleteMe options ===
-
-" Don't ask to confirm extra conf file
-let g:ycm_confirm_extra_conf = 0
-
-let g:ycm_filetype_whitelist = {'python':1, 'cpp':1, 'c':1}
+" === Neocomplete options ===
+let g:neocomplete#enable_at_startup = 1
 
 " === Other shortcuts ===
 
