@@ -13,12 +13,12 @@
 [submodule "bundle/p4checkout"]
 	path = bundle/p4checkout
 	url = https://github.com/aslater/p4checkout
-[submodule "bundle\\clang_complete"]
-	path = bundle\\clang_complete
+[submodule "bundle/clang_complete"]
+	path = bundle/clang_complete
 	url = http://github.com/Rip-Rip/clang_complete
 [submodule "bundle/youcompleteme"]
 	path = bundle/youcompleteme
 	url = https://github.com/Valloric/YouCompleteMe
-[submodule "bundle\\neocomplete"]
-	path = bundle\\neocomplete
+[submodule "bundle/neocomplete"]
+	path = bundle/neocomplete
 	url = https://github.com/Shougo/neocomplete.vim.git
