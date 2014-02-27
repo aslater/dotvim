@@ -19,6 +19,3 @@
 [submodule "bundle/youcompleteme"]
 	path = bundle/youcompleteme
 	url = https://github.com/Valloric/YouCompleteMe
-[submodule "bundle/neocomplete"]
-	path = bundle/neocomplete
-	url = https://github.com/Shougo/neocomplete.vim.git
