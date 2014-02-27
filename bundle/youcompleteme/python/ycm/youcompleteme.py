@@ -236,6 +236,7 @@ class YouCompleteMe( object ):
   def OnVimLeave( self ):
     if self._IsServerAlive():
       self._server_popen.terminate()
+      self._server_popen.communicate()
     os.remove( self._temp_options_filename )
 
     if not self._user_options[ 'server_keep_logfiles' ]:
